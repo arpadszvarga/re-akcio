@@ -1,0 +1,8 @@
+IDÉZET BOX:
+
+<blockquote class='idezet'></blockquote>
+
+
+VÉLEMÉNY BOX:
+
+<div class='velemeny-box'></div>
