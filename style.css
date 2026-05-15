@@ -4,6 +4,10 @@ body {
     background-color: white;
 }
 
+html{
+    min-height: 100%;
+}
+
 .navbar {
     background-color: #15253c !important;
     margin-bottom: 20px;
