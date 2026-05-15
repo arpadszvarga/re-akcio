@@ -1,19 +1,22 @@
 async function hirekBetoltese() {
     const container = document.getElementById('hirek-lista');
     const heroContainer = document.getElementById('hero-hir');
-    if (!container) return;
+
+    // Csak akkor álljon le, ha SEMMILYEN konténert nem találunk
+    if (!container && !heroContainer) return;
 
     try {
         const response = await fetch('hirek.json');
         const hirek = await response.json();
         const rendezettHirek = [...hirek].reverse();
-        const isFooldal = document.body.classList.contains('fooldal-body');
+
+        // Ellenőrizzük, hogy a főoldalon vagyunk-e
+        const isFooldal = document.getElementById('hero-hir') !== null;
 
         if (isFooldal) {
             // --- FŐOLDAL LOGIKA ---
             const kiemeltHirek = rendezettHirek.filter(h => h.kiemelt);
 
-            // 1. Hero hír betöltése (ha van kiemelt)
             if (heroContainer && kiemeltHirek.length > 0) {
                 const hero = kiemeltHirek[0];
                 heroContainer.innerHTML = `
@@ -33,49 +36,48 @@ async function hirekBetoltese() {
                 `;
             }
 
-            // 2. Többi kiemelt rácsba (a 2. hírtől kezdve)
-            container.innerHTML = '';
-            kiemeltHirek.slice(1).forEach(hir => {
-                container.innerHTML += `
-                    <div class="col-md-6 mb-4" onclick="cikkMegnyitasa(${hir.id})" style="cursor:pointer;">
-                        <div class="border-bottom pb-3 h-100">
-                            <img src="${hir.kep}" class="img-fluid mb-3" style="aspect-ratio:16/9; object-fit:cover; width:100%;">
-                            <h3 style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h3>
-                            <p class="text-muted small">${hir.alcim}</p>
-                            <div class="datum" style="font-size: 0.8rem; color: #888;">${hir.datum}</div>
+            if (container) {
+                container.innerHTML = '';
+                kiemeltHirek.slice(1).forEach(hir => {
+                    container.innerHTML += `
+                        <div class="col-md-6 mb-4" onclick="cikkMegnyitasa(${hir.id})" style="cursor:pointer;">
+                            <div class="border-bottom pb-3 h-100">
+                                <img src="${hir.kep}" class="img-fluid mb-3" style="aspect-ratio:16/9; object-fit:cover; width:100%;">
+                                <h3 style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h3>
+                                <p class="text-muted small">${hir.alcim}</p>
+                                <div class="datum" style="font-size: 0.8rem; color: #888;">${hir.datum}</div>
                             </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
 
-        } else {
-            // --- HÍREK OLDAL LOGIKA (A kétvonalas Mandiner-stílus) ---
+        } else if (container) {
+            // --- HÍREK OLDAL LOGIKA ---
             container.innerHTML = '';
             rendezettHirek.forEach(hir => {
                 container.innerHTML += `
-                    <div class="hír-konténer mx-auto" onclick="cikkMegnyitasa(${hir.id})">
-                        <div class="row g-0 align-items-center">
-                            <div class="col-md-4">
-                                <div class="kep-tarolo">
-                                    <img src="${hir.kep}" alt="Hír">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="kartya">
-                                    <div class="re">Re:akció</div>
-                                    <h2 class="cim">${hir.cim}</h2>
-                                    <p class="alcim">${hir.alcim}</p>
-                                    <div class="datum">${hir.datum}</div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="hír-konténer mx-auto mb-4" onclick="cikkMegnyitasa(${hir.id})" style="cursor:pointer; max-width: 800px;">
+            <div class="row g-0 align-items-center pb-3"> <div class="col-md-4">
+                    <div class="kep-tarolo">
+                        <img src="${hir.kep}" alt="Hír" style="width:100%; aspect-ratio:16/9; object-fit:cover;">
                     </div>
-                `;
+                </div>
+                <div class="col-md-8 ps-md-4">
+                    <div class="kartya">
+                        <div class="re">Re:akció</div>
+                        <h2 class="cim" style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h2>
+                        <p class="alcim text-muted">${hir.alcim}</p>
+                        <div class="datum" style="font-size: 0.8rem;">${hir.datum}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
             });
         }
     } catch (e) {
-        console.error("Hiba történt:", e);
+        console.error("Hiba történt a hírek betöltésekor:", e);
     }
 }
 
