@@ -6,3 +6,8 @@ IDÉZET BOX:
 VÉLEMÉNY BOX:
 
 <div class='velemeny-box'></div>
+
+
+ÚJ SOR:
+
+<br>
