@@ -81,36 +81,51 @@ async function hirekBetoltese() {
     }
 }
 
-// CIKK BETÖLTÉSE (Változatlan)
 async function cikkReszletekBetoltese() {
     const container = document.getElementById('cikk-betoltes');
     if (!container) return;
 
-    const id = localStorage.getItem('aktualisHirID');
-    const response = await fetch('hirek.json');
-    const hirek = await response.json();
-    const hir = hirek.find(h => h.id == id);
+    // Kinyerjük az ID-t a címsorból (pl. ?id=12 -> 12)
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
 
-    if (hir) {
-        document.title = hir.cim + " | RE:AKCIÓ";
-        container.innerHTML = `
-            <div class="mb-4">
-                <span class="re" style="font-size: 1rem;">Re:akció</span>
-                <h1 class="display-4 fw-bold mb-3" style="font-family: 'serif';">${hir.cim}</h1>
-                <p class="lead text-muted mb-4">${hir.alcim}</p>
-                <div class="datum mb-4">${hir.datum}</div>
-                <img src="${hir.kep}" class="img-fluid w-100 mb-5" style="aspect-ratio: 16/9; object-fit: cover;">
-            </div>
-            <div class="cikk-szoveg" style="font-size: 1.1rem; line-height: 1.8;">
-                ${hir.tartalom}
-            </div>
-        `;
+    // Ha nincs ID a linkben, visszaküldjük a főoldalra, hogy ne legyen hiba
+    if (!id) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    try {
+        const response = await fetch('hirek.json');
+        const hirek = await response.json();
+        const hir = hirek.find(h => h.id == id);
+
+        if (hir) {
+            // Beállítjuk a böngésző fülének a nevét a cikk címére
+            document.title = hir.cim + " | RE:AKCIÓ";
+            
+            container.innerHTML = `
+                <div class="mb-4">
+                    <span class="re" style="font-size: 1rem;">Re:akció</span>
+                    <h1 class="display-4 fw-bold mb-3" style="font-family: 'serif';">${hir.cim}</h1>
+                    <p class="lead text-muted mb-4">${hir.alcim}</p>
+                    <div class="datum mb-4">${hir.datum}</div>
+                    <img src="${hir.kep}" class="img-fluid w-100 mb-5" style="aspect-ratio: 16/9; object-fit: cover;">
+                </div>
+                <div class="cikk-szoveg" style="font-size: 1.1rem; line-height: 1.8;">
+                    ${hir.tartalom}
+                </div>
+            `;
+        } else {
+            container.innerHTML = `<div class="alert alert-danger">A keresett cikk nem található.</div>`;
+        }
+    } catch (e) {
+        console.error("Hiba a cikk betöltésekor:", e);
     }
 }
-
 function cikkMegnyitasa(id) {
-    localStorage.setItem('aktualisHirID', id);
-    window.location.href = 'cikk.html';
+    // A localStorage helyett a URL-be tesszük az ID-t paraméterként
+    window.location.href = `cikk.html?id=${id}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
