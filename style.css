@@ -25,7 +25,6 @@ html{
 
 @media (min-width: 992px) {
 
-    /* Csak asztali nézetben, hogy mobilon ne csússzon el */
     .navbar-collapse {
         display: flex !important;
         justify-content: center;
@@ -38,22 +37,15 @@ html{
     }
 }
 
-/* A szendvicsgomb ikonjának átszínezése */
 .navbar-toggler-icon {
-    /* Ez a sor fehérre színezi */
     filter: invert(1);
 }
 
-/* Ha konkrét színt akarsz (pl. pirosas): */
 .navbar-toggler {
     border-color: rgb(106, 114, 117);
-    /* A keret színe */
     border: none;
-    /* Keret eltüntetése */
     outline: none;
-    /* Kattintáskori kék keret eltüntetése */
     box-shadow: none !important;
-    /* Bootstrap árnyék kikapcsolása */
 }
 
 .kartya {
@@ -91,7 +83,6 @@ html{
     font-size: 0.85rem;
 }
 
-/* A hír-konténer egyedi stílusa a scripthez */
 .hír-konténer {
     max-width: 1000px; 
     padding: 25px 0; 
@@ -106,10 +97,9 @@ html{
 .kep-tarolo { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
 .kep-tarolo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* AZ IDÉZET BOX STÍLUSA */
 .idezet {
     background-color: #f4f4f4;
-    border-right: 8px solid #c00; /* Vastag piros vonal a jobb oldalon */
+    border-right: 8px solid #c00; 
     padding: 20px;
     margin: 30px 0;
     position: relative;
@@ -131,10 +121,9 @@ html{
 .idezet::after { bottom: -5px; right: 10px; }
 
 .cikk-szoveg {
-    font-family: 'Georgia', serif; /* A hosszú szöveg talpas betűvel kényelmesebb */
+    font-family: 'Georgia', serif; 
 }
 
-/* AZ IDÉZET BOX STÍLUSA - Pontosan ahogy kérted */
 .idezet {
     background-color: #f9f9f9;
     border-right: 10px solid #c00;
@@ -149,7 +138,6 @@ html{
     line-height: 1.6;
 }
 
-/* Felső idézőjel - közvetlenül a szöveg előtt */
 .idezet::before {
     content: '„';
     color: #c00;
@@ -157,11 +145,10 @@ html{
     font-family: 'Georgia', serif;
     vertical-align: middle;
     margin-right: 10px;
-    line-height: 0; /* Ez megakadályozza, hogy eltolja a sort */
+    line-height: 0; 
     opacity: 0.4;
 }
 
-/* Alsó idézőjel - közvetlenül a szöveg után */
 .idezet::after {
     content: '”';
     color: #c00;
@@ -169,13 +156,13 @@ html{
     font-family: 'Georgia', serif;
     vertical-align: middle;
     margin-left: 10px;
-    line-height: 0; /* Ez megakadályozza, hogy eltolja a sort */
+    line-height: 0; 
     opacity: 0.4;
     padding: 10px;
 }
 
 #hirek-lista .col-md-6:hover h3 {
-    color: #c00; /* Piros lesz a cím, ha ráviszed az egeret */
+    color: #c00; 
     transition: 0.2s;
 }
 
@@ -184,17 +171,15 @@ html{
 }
 
 #hirek-lista .col-md-6:hover img {
-    transform: scale(1.02); /* Kicsit rázoomol a képre hovernél */
+    transform: scale(1.02); 
 }
 
-/* Általános oldalkonténer */
 .page-container {
     max-width: 800px;
     margin-top: 3rem;
     margin-bottom: 3rem;
 }
 
-/* Oldalcímek */
 .page-title {
     font-family: 'Playfair Display', serif;
     font-weight: 800;
@@ -210,7 +195,6 @@ html{
     margin-bottom: 2rem;
 }
 
-/* Rólam oldal elemei */
 .profile-img {
     width: 100%;
     border-radius: 4px;
@@ -246,7 +230,6 @@ html{
     color: #333;
 }
 
-/* Kapcsolat oldal elemei */
 .contact-width {
     max-width: 600px;
 }
@@ -287,9 +270,8 @@ html{
     color: #c00;
 }
 
-/* Saját vélemény doboz a cikken belül */
 .velemeny-box {
-    background-color: #fdf2f2; /* Nagyon halvány pirosas háttér */
+    background-color: #fdf2f2; 
     border-left: 4px solid #c00;
     padding: 1.5rem;
     margin: 2rem 0;
@@ -299,7 +281,6 @@ html{
     color: #333;
 }
 
-/* Egy kis felirat a doboz tetejére */
 .velemeny-box::before {
     content: "SZERINTEM:";
     display: block;

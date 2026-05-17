@@ -2,7 +2,6 @@ async function hirekBetoltese() {
     const container = document.getElementById('hirek-lista');
     const heroContainer = document.getElementById('hero-hir');
 
-    // Csak akkor álljon le, ha SEMMILYEN konténert nem találunk
     if (!container && !heroContainer) return;
 
     try {
@@ -10,11 +9,9 @@ async function hirekBetoltese() {
         const hirek = await response.json();
         const rendezettHirek = [...hirek].reverse();
 
-        // Ellenőrizzük, hogy a főoldalon vagyunk-e
         const isFooldal = document.getElementById('hero-hir') !== null;
 
         if (isFooldal) {
-            // --- FŐOLDAL LOGIKA ---
             const kiemeltHirek = rendezettHirek.filter(h => h.kiemelt);
 
             if (heroContainer && kiemeltHirek.length > 0) {
@@ -53,7 +50,6 @@ async function hirekBetoltese() {
             }
 
         } else if (container) {
-            // --- HÍREK OLDAL LOGIKA ---
             container.innerHTML = '';
             rendezettHirek.forEach(hir => {
                 container.innerHTML += `
@@ -85,11 +81,9 @@ async function cikkReszletekBetoltese() {
     const container = document.getElementById('cikk-betoltes');
     if (!container) return;
 
-    // Kinyerjük az ID-t a címsorból (pl. ?id=12 -> 12)
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
 
-    // Ha nincs ID a linkben, visszaküldjük a főoldalra, hogy ne legyen hiba
     if (!id) {
         window.location.href = 'index.html';
         return;
@@ -101,7 +95,6 @@ async function cikkReszletekBetoltese() {
         const hir = hirek.find(h => h.id == id);
 
         if (hir) {
-            // Beállítjuk a böngésző fülének a nevét a cikk címére
             document.title = hir.cim + " | RE:AKCIÓ";
             
             container.innerHTML = `
@@ -124,7 +117,6 @@ async function cikkReszletekBetoltese() {
     }
 }
 function cikkMegnyitasa(id) {
-    // A localStorage helyett a URL-be tesszük az ID-t paraméterként
     window.location.href = `cikk.html?id=${id}`;
 }
 
