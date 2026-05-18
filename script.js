@@ -96,7 +96,17 @@ async function cikkReszletekBetoltese() {
 
         if (hir) {
             document.title = hir.cim + " | RE:AKCIÓ";
-            
+
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-desc');
+            const ogImage = document.getElementById('og-image');
+            const ogUrl = document.getElementById('og-url');
+
+            if (ogTitle) ogTitle.setAttribute('content', `RE:AKCIÓ - ${hir.cim}`);
+            if (ogDesc) ogDesc.setAttribute('content', hir.alcim);
+            if (ogImage) ogImage.setAttribute('content', window.location.origin + '/' + hir.kep);
+            if (ogUrl) ogUrl.setAttribute('content', window.location.href);
+
             container.innerHTML = `
                 <div class="mb-4">
                     <span class="re" style="font-size: 1rem;">Re:akció</span>
