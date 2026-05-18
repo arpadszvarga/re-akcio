@@ -97,15 +97,25 @@ async function cikkReszletekBetoltese() {
         if (hir) {
             document.title = hir.cim + " | RE:AKCIÓ";
 
-            const ogTitle = document.getElementById('og-title');
-            const ogDesc = document.getElementById('og-desc');
-            const ogImage = document.getElementById('og-image');
-            const ogUrl = document.getElementById('og-url');
+            document.title = hir.cim + " | RE:AKCIÓ";
 
+            // Megkeressük a meta tageket a 'property' attribútumuk alapján
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+
+            // Ha léteznek, átírjuk a 'content' értéküket a JSON-ből jövő adatokra
             if (ogTitle) ogTitle.setAttribute('content', `RE:AKCIÓ - ${hir.cim}`);
             if (ogDesc) ogDesc.setAttribute('content', hir.alcim);
-            if (ogImage) ogImage.setAttribute('content', window.location.origin + '/' + hir.kep);
             if (ogUrl) ogUrl.setAttribute('content', window.location.href);
+
+            // A képnél nagyon fontos, hogy a TELJES internetes címet kapja meg a WhatsApp (https://...)
+            if (ogImage) {
+                // Ha a JSON-ben pl. 'forrasok/kep.png' van, ebből csinál egy teljes linket
+                const teljesKepUrl = window.location.origin + '/' + hir.kep;
+                ogImage.setAttribute('content', teljesKepUrl);
+            }
 
             container.innerHTML = `
                 <div class="mb-4">
