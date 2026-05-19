@@ -16,8 +16,9 @@ async function hirekBetoltese() {
 
             if (heroContainer && kiemeltHirek.length > 0) {
                 const hero = kiemeltHirek[0];
+                // JAVÍTVA: hir.slug lecserélve hero.slug-ra, hogy ne dobjon ReferenceErrort!
                 heroContainer.innerHTML = `
-                    <div class="row align-items-center g-4" onclick="cikkMegnyitasa(${hero.id})" style="cursor:pointer;">
+                    <div class="row align-items-center g-4" onclick="cikkMegnyitasa('${hero.slug}')" style="cursor:pointer;">
                         <div class="col-lg-8">
                             <div class="kep-tarolo shadow-sm">
                                 <img src="${hero.kep}" style="width:100%; aspect-ratio:16/9; object-fit:cover;">
@@ -37,7 +38,7 @@ async function hirekBetoltese() {
                 container.innerHTML = '';
                 kiemeltHirek.slice(1).forEach(hir => {
                     container.innerHTML += `
-                        <div class="col-md-6 mb-4" onclick="cikkMegnyitasa(${hir.id})" style="cursor:pointer;">
+                        <div class="col-md-6 mb-4" onclick="cikkMegnyitasa('${hir.slug}')" style="cursor:pointer;">
                             <div class="border-bottom pb-3 h-100">
                                 <img src="${hir.kep}" class="img-fluid mb-3" style="aspect-ratio:16/9; object-fit:cover; width:100%;">
                                 <h3 style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h3>
@@ -53,23 +54,24 @@ async function hirekBetoltese() {
             container.innerHTML = '';
             rendezettHirek.forEach(hir => {
                 container.innerHTML += `
-        <div class="hír-konténer mx-auto mb-4" onclick="cikkMegnyitasa(${hir.id})" style="cursor:pointer; max-width: 800px;">
-            <div class="row g-0 align-items-center pb-3"> <div class="col-md-4">
-                    <div class="kep-tarolo">
-                        <img src="${hir.kep}" alt="Hír" style="width:100%; aspect-ratio:16/9; object-fit:cover;">
+                    <div class="hír-konténer mx-auto mb-4" onclick="cikkMegnyitasa('${hir.slug}')" style="cursor:pointer; max-width: 800px;">
+                        <div class="row g-0 align-items-center pb-3"> 
+                            <div class="col-md-4">
+                                <div class="kep-tarolo">
+                                    <img src="${hir.kep}" alt="Hír" style="width:100%; aspect-ratio:16/9; object-fit:cover;">
+                                </div>
+                            </div>
+                            <div class="col-md-8 ps-md-4">
+                                <div class="kartya">
+                                    <div class="re">Re:akció</div>
+                                    <h2 class="cim" style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h2>
+                                    <p class="alcim text-muted">${hir.alcim}</p>
+                                    <div class="datum" style="font-size: 0.8rem;">${hir.datum}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-8 ps-md-4">
-                    <div class="kartya">
-                        <div class="re">Re:akció</div>
-                        <h2 class="cim" style="font-family: 'serif'; font-weight: 700;">${hir.cim}</h2>
-                        <p class="alcim text-muted">${hir.alcim}</p>
-                        <div class="datum" style="font-size: 0.8rem;">${hir.datum}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+                `;
             });
         }
     } catch (e) {
@@ -79,12 +81,12 @@ async function hirekBetoltese() {
 
 async function cikkReszletekBetoltese() {
     const container = document.getElementById('cikk-betoltes');
-    if (!container) return;
+    
+    if (!container) return; 
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+    const cikkSlug = window.location.search.substring(1);
 
-    if (!id) {
+    if (!cikkSlug) {
         window.location.href = 'index.html';
         return;
     }
@@ -92,31 +94,12 @@ async function cikkReszletekBetoltese() {
     try {
         const response = await fetch('hirek.json');
         const hirek = await response.json();
-        const hir = hirek.find(h => h.id == id);
+        
+        const hir = hirek.find(h => h.slug === cikkSlug);
 
         if (hir) {
             document.title = hir.cim + " | RE:AKCIÓ";
-
-            document.title = hir.cim + " | RE:AKCIÓ";
-
-            // Megkeressük a meta tageket a 'property' attribútumuk alapján
-            const ogTitle = document.querySelector('meta[property="og:title"]');
-            const ogDesc = document.querySelector('meta[property="og:description"]');
-            const ogImage = document.querySelector('meta[property="og:image"]');
-            const ogUrl = document.querySelector('meta[property="og:url"]');
-
-            // Ha léteznek, átírjuk a 'content' értéküket a JSON-ből jövő adatokra
-            if (ogTitle) ogTitle.setAttribute('content', `RE:AKCIÓ - ${hir.cim}`);
-            if (ogDesc) ogDesc.setAttribute('content', hir.alcim);
-            if (ogUrl) ogUrl.setAttribute('content', window.location.href);
-
-            // A képnél nagyon fontos, hogy a TELJES internetes címet kapja meg a WhatsApp (https://...)
-            if (ogImage) {
-                // Ha a JSON-ben pl. 'forrasok/kep.png' van, ebből csinál egy teljes linket
-                const teljesKepUrl = window.location.origin + '/' + hir.kep;
-                ogImage.setAttribute('content', teljesKepUrl);
-            }
-
+            
             container.innerHTML = `
                 <div class="mb-4">
                     <span class="re" style="font-size: 1rem;">Re:akció</span>
@@ -133,11 +116,12 @@ async function cikkReszletekBetoltese() {
             container.innerHTML = `<div class="alert alert-danger">A keresett cikk nem található.</div>`;
         }
     } catch (e) {
-        console.error("Hiba a cikk betöltésekor:", e);
+        console.error("Hiba történt a cikk betöltése közben:", e);
     }
 }
-function cikkMegnyitasa(id) {
-    window.location.href = `cikk.html?id=${id}`;
+
+function cikkMegnyitasa(slug) {
+    window.location.href = `cikk.html?${slug}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
